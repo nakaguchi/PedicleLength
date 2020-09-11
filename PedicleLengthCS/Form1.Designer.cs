@@ -41,6 +41,7 @@
             this.BtnDelete = new System.Windows.Forms.Button();
             this.BtnLoad = new System.Windows.Forms.Button();
             this.BtnSave = new System.Windows.Forms.Button();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TbrSliceIdx)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TbrWindowLevel)).BeginInit();
@@ -240,6 +241,12 @@
             this.BtnSave.UseVisualStyleBackColor = true;
             this.BtnSave.Click += new System.EventHandler(this.BtnSave_Click);
             // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.DefaultExt = "csv";
+            this.saveFileDialog1.Filter = "CSVファイル|*.csv";
+            this.saveFileDialog1.Title = "保存";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -294,6 +301,7 @@
         private System.Windows.Forms.Button BtnDelete;
         private System.Windows.Forms.Button BtnLoad;
         private System.Windows.Forms.Button BtnSave;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 

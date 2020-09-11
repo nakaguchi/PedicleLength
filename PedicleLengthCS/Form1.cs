@@ -22,6 +22,7 @@ namespace PedicleLengthCS {
         private List<Mat> _Slices = new List<Mat>();
         private List<Point3i> _Points = new List<Point3i>();
         string _DicomDir = "";
+        double _Length = 0;
         int _idx;
         int _wl;
         int _ww;
@@ -219,17 +220,17 @@ namespace PedicleLengthCS {
         /// </summary>
         private void UpdateList() {
             LbxPoints.Items.Clear();
-            double length = 0;
+            _Length = 0;
             for (var i = 0; i < _Points.Count; i++) {
                 LbxPoints.Items.Add($"{i + 1,2} ({_Points[i].X,3}, {_Points[i].Y,3}, {_Points[i].Z,4})");
                 if (i > 0) {
                     var dx = (_Points[i].X - _Points[i - 1].X) * _PixelSpacingX;
                     var dy = (_Points[i].Y - _Points[i - 1].Y) * _PixelSpacingY;
                     var dz = (_Points[i].Z - _Points[i - 1].Z) * _SliceThickness;
-                    length += Math.Sqrt(dx * dx + dy * dy + dz * dz);
+                    _Length += Math.Sqrt(dx * dx + dy * dy + dz * dz);
                 }
             }
-            LblLength.Text = $"{length,6:0.0}";
+            LblLength.Text = $"{_Length,6:0.0}";
         }
 
         /// <summary>
@@ -264,7 +265,19 @@ namespace PedicleLengthCS {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void BtnSave_Click(object sender, EventArgs e) {
+            if (_Slices.Count < 1) return;
+            saveFileDialog1.FileName = "setting";
+            if (saveFileDialog1.ShowDialog() == DialogResult.Cancel) return;
 
+            var writer = new StreamWriter(saveFileDialog1.FileName, false);
+            writer.WriteLine($"DicomDir,{_DicomDir}");
+            writer.WriteLine($"Window Level,{_wl}");
+            writer.WriteLine($"Window Width,{_ww}");
+            for (var i = 0; i < _Points.Count; i++) {
+                writer.WriteLine($"Point,{i},X,{_Points[i].X},Y,{_Points[i].Y},Z,{_Points[i].Z}");
+            }
+            writer.WriteLine($"Length,{_Length},mm");
+            writer.Close();
         }
     }
 }
