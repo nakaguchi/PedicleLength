@@ -19,8 +19,10 @@ namespace PedicleLengthCS {
         private int _ImgW = 512;
         private int _ImgH = 512;
         public const int PointSize = 4;
+        public const int LineSize = 2;
         private List<Mat> _Slices = new List<Mat>();
-        private Mat _LineVolume;
+        private Mat _LineSheet;
+        private List<Mat> _LineVolume = new List<Mat>();
         private List<Point3i> _Points = new List<Point3i>();
         private string _DicomDir = "";
         private double _Length = 0;
@@ -62,8 +64,10 @@ namespace PedicleLengthCS {
                     _PixelSpacingY = dicomImg.Dataset.GetValue<double>(new DicomTag(0x28, 0x30), 1);
                     _ImgW = dicomImg.Width;
                     _ImgH = dicomImg.Height;
+                    _LineSheet = new Mat(new Size(_ImgW, _ImgH), MatType.CV_8UC3, new Scalar(0, 0, 255));
                 }
                 _Slices.Add(new Mat(_ImgH, _ImgW, MatType.CV_16SC1, dicomImg.PixelData.GetFrame(0).Data));
+                _LineVolume.Add(new Mat(_ImgH, _ImgW, MatType.CV_8UC1, new Scalar(0)));
             }
             if (_Slices.Count < 1) {
                 MessageBox.Show("Can't find Dicom image");
@@ -91,6 +95,9 @@ namespace PedicleLengthCS {
             _Slices[_Index].ConvertTo(frame8, MatType.CV_8UC1, alpha, beta);
             var frameC = new Mat();
             Cv2.CvtColor(frame8, frameC, ColorConversionCodes.GRAY2BGR);
+
+            // 線の描画
+            _LineSheet.CopyTo(frameC, _LineVolume[_Index]);
 
             // 点の描画
             for (int i = 0; i < _Points.Count; i++) {
@@ -143,6 +150,8 @@ namespace PedicleLengthCS {
 #if DEBUG
             _DicomDir = @"D:\usr\prog\PedicleLength\SampleData\5mm early phase";
 #else
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.Cancel) return;
+            _DicomDir = folderBrowserDialog1.SelectedPath;
 #endif
             if (!ReadDicom()) return;
             this.SetTitle();
@@ -233,9 +242,19 @@ namespace PedicleLengthCS {
                     var dy = (_Points[i].Y - _Points[i - 1].Y) * _PixelSpacingY;
                     var dz = (_Points[i].Z - _Points[i - 1].Z) * _SliceThickness;
                     _Length += Math.Sqrt(dx * dx + dy * dy + dz * dz);
+                    this.DrawLine(_Points[i], _Points[i - 1]);
                 }
             }
             LblLength.Text = $"{_Length,6:0.0}";
+        }
+
+        /// <summary>
+        /// 点間に線を引く
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        private void DrawLine(Point3i p1, Point3i p2) {
+            Cv2.Line(_LineVolume[p1.Z], p1.X, p1.Y, p2.X, p2.Y, new Scalar(255), LineSize);
         }
 
         /// <summary>

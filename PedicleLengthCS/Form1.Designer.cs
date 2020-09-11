@@ -256,6 +256,11 @@
             this.openFileDialog1.Filter = "CSV file|*.csv";
             this.openFileDialog1.Title = "Load config file";
             // 
+            // folderBrowserDialog1
+            // 
+            this.folderBrowserDialog1.Description = "Select Dicom folder";
+            this.folderBrowserDialog1.ShowNewFolderButton = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
