@@ -38,6 +38,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.LblCursor = new System.Windows.Forms.Label();
+            this.BtnDelete = new System.Windows.Forms.Button();
+            this.BtnLoad = new System.Windows.Forms.Button();
+            this.BtnSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TbrSliceIdx)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TbrWindowLevel)).BeginInit();
@@ -137,7 +140,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.LbxPoints.Font = new System.Drawing.Font("ＭＳ ゴシック", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.LbxPoints.FormattingEnabled = true;
-            this.LbxPoints.Location = new System.Drawing.Point(15, 268);
+            this.LbxPoints.Location = new System.Drawing.Point(15, 249);
             this.LbxPoints.Name = "LbxPoints";
             this.LbxPoints.Size = new System.Drawing.Size(158, 199);
             this.LbxPoints.TabIndex = 10;
@@ -189,7 +192,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label3.Location = new System.Drawing.Point(12, 252);
+            this.label3.Location = new System.Drawing.Point(12, 233);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(58, 13);
             this.label3.TabIndex = 15;
@@ -205,11 +208,45 @@
             this.LblCursor.TabIndex = 16;
             this.LblCursor.Text = "Cursor";
             // 
+            // BtnDelete
+            // 
+            this.BtnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BtnDelete.Location = new System.Drawing.Point(15, 454);
+            this.BtnDelete.Name = "BtnDelete";
+            this.BtnDelete.Size = new System.Drawing.Size(48, 28);
+            this.BtnDelete.TabIndex = 17;
+            this.BtnDelete.Text = "Del";
+            this.BtnDelete.UseVisualStyleBackColor = true;
+            this.BtnDelete.Click += new System.EventHandler(this.BtnDelete_Click);
+            // 
+            // BtnLoad
+            // 
+            this.BtnLoad.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BtnLoad.Location = new System.Drawing.Point(69, 454);
+            this.BtnLoad.Name = "BtnLoad";
+            this.BtnLoad.Size = new System.Drawing.Size(48, 28);
+            this.BtnLoad.TabIndex = 18;
+            this.BtnLoad.Text = "Load";
+            this.BtnLoad.UseVisualStyleBackColor = true;
+            // 
+            // BtnSave
+            // 
+            this.BtnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BtnSave.Location = new System.Drawing.Point(123, 454);
+            this.BtnSave.Name = "BtnSave";
+            this.BtnSave.Size = new System.Drawing.Size(48, 28);
+            this.BtnSave.TabIndex = 19;
+            this.BtnSave.Text = "Save";
+            this.BtnSave.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(703, 534);
+            this.Controls.Add(this.BtnSave);
+            this.Controls.Add(this.BtnLoad);
+            this.Controls.Add(this.BtnDelete);
             this.Controls.Add(this.LblCursor);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -253,6 +290,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label LblCursor;
+        private System.Windows.Forms.Button BtnDelete;
+        private System.Windows.Forms.Button BtnLoad;
+        private System.Windows.Forms.Button BtnSave;
     }
 }
 

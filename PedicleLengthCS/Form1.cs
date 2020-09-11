@@ -212,10 +212,14 @@ namespace PedicleLengthCS {
                     length += Math.Sqrt(dx * dx + dy * dy + dz * dz);
                 }
             }
-            Debug.WriteLine(length);
             LblLength.Text = $"{length,6:0.0}";
         }
 
+        /// <summary>
+        /// リスト項目クリック
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LbxPoints_Click(object sender, EventArgs e) {
             if (((ListBox)sender).Items.Count < 1) return;
             var txt = ((ListBox)sender).SelectedItem.ToString();
@@ -223,6 +227,18 @@ namespace PedicleLengthCS {
             if (idx >= 0 && idx < _Points.Count) {
                 TbrSliceIdx.Value = _Points[idx].Z;
             }
+        }
+
+        /// <summary>
+        /// 削除ボタン
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnDelete_Click(object sender, EventArgs e) {
+            if (LbxPoints.SelectedIndex < 0) return;
+            _Points.RemoveAt(LbxPoints.SelectedIndex);
+            this.UpdateList();
+            this.Draw();
         }
     }
 }
