@@ -16,11 +16,11 @@ using OpenCvSharp.Extensions;
 namespace PedicleLengthCS {
     public partial class MainForm : Form {
 
-        public const int ImgW = 512;
-        public const int ImgH = 512;
+        private int _ImgW = 512;
+        private int _ImgH = 512;
         public const int PointSize = 4;
         private List<Mat> _Slices = new List<Mat>();
-
+        private Mat _LineVolume;
         private List<Point3i> _Points = new List<Point3i>();
         private string _DicomDir = "";
         private double _Length = 0;
@@ -60,8 +60,10 @@ namespace PedicleLengthCS {
                     _SliceThickness = dicomImg.Dataset.GetValue<double>(new DicomTag(0x18, 0x50), 0);
                     _PixelSpacingX = dicomImg.Dataset.GetValue<double>(new DicomTag(0x28, 0x30), 0);
                     _PixelSpacingY = dicomImg.Dataset.GetValue<double>(new DicomTag(0x28, 0x30), 1);
+                    _ImgW = dicomImg.Width;
+                    _ImgH = dicomImg.Height;
                 }
-                _Slices.Add(new Mat(ImgH, ImgW, MatType.CV_16SC1, dicomImg.PixelData.GetFrame(0).Data));
+                _Slices.Add(new Mat(_ImgH, _ImgW, MatType.CV_16SC1, dicomImg.PixelData.GetFrame(0).Data));
             }
             if (_Slices.Count < 1) {
                 MessageBox.Show("Can't find Dicom image");
