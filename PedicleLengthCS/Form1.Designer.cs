@@ -141,6 +141,7 @@
             this.LbxPoints.Name = "LbxPoints";
             this.LbxPoints.Size = new System.Drawing.Size(158, 199);
             this.LbxPoints.TabIndex = 10;
+            this.LbxPoints.Click += new System.EventHandler(this.LbxPoints_Click);
             // 
             // LblVoxel
             // 

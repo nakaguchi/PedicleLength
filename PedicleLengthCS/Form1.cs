@@ -215,5 +215,14 @@ namespace PedicleLengthCS {
             Debug.WriteLine(length);
             LblLength.Text = $"{length,6:0.0}";
         }
+
+        private void LbxPoints_Click(object sender, EventArgs e) {
+            if (((ListBox)sender).Items.Count < 1) return;
+            var txt = ((ListBox)sender).SelectedItem.ToString();
+            var idx = Convert.ToInt32(txt.Substring(0,3)) - 1;
+            if (idx >= 0 && idx < _Points.Count) {
+                TbrSliceIdx.Value = _Points[idx].Z;
+            }
+        }
     }
 }
