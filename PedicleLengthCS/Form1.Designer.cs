@@ -36,7 +36,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.LblLength = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.LblCursor = new System.Windows.Forms.Label();
             this.BtnDelete = new System.Windows.Forms.Button();
             this.BtnLoad = new System.Windows.Forms.Button();
@@ -44,6 +43,9 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.ChkPoints = new System.Windows.Forms.CheckBox();
+            this.ChkLines = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TbrSliceIdx)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TbrWindowLevel)).BeginInit();
@@ -191,16 +193,6 @@
             this.label2.TabIndex = 14;
             this.label2.Text = "mm";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label3.Location = new System.Drawing.Point(12, 233);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(58, 13);
-            this.label3.TabIndex = 15;
-            this.label3.Text = "Point list";
-            // 
             // LblCursor
             // 
             this.LblCursor.AutoSize = true;
@@ -261,16 +253,53 @@
             this.folderBrowserDialog1.Description = "Select Dicom folder";
             this.folderBrowserDialog1.ShowNewFolderButton = false;
             // 
+            // ChkPoints
+            // 
+            this.ChkPoints.AutoSize = true;
+            this.ChkPoints.Checked = true;
+            this.ChkPoints.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ChkPoints.Location = new System.Drawing.Point(58, 227);
+            this.ChkPoints.Name = "ChkPoints";
+            this.ChkPoints.Size = new System.Drawing.Size(56, 16);
+            this.ChkPoints.TabIndex = 20;
+            this.ChkPoints.Text = "Points";
+            this.ChkPoints.UseVisualStyleBackColor = true;
+            this.ChkPoints.CheckedChanged += new System.EventHandler(this.ShowCheckChanged);
+            // 
+            // ChkLines
+            // 
+            this.ChkLines.AutoSize = true;
+            this.ChkLines.Checked = true;
+            this.ChkLines.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ChkLines.Location = new System.Drawing.Point(120, 227);
+            this.ChkLines.Name = "ChkLines";
+            this.ChkLines.Size = new System.Drawing.Size(51, 16);
+            this.ChkLines.TabIndex = 21;
+            this.ChkLines.Text = "Lines";
+            this.ChkLines.UseVisualStyleBackColor = true;
+            this.ChkLines.CheckedChanged += new System.EventHandler(this.ShowCheckChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(14, 228);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(32, 12);
+            this.label3.TabIndex = 22;
+            this.label3.Text = "Show";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(703, 534);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.ChkLines);
+            this.Controls.Add(this.ChkPoints);
             this.Controls.Add(this.BtnSave);
             this.Controls.Add(this.BtnLoad);
             this.Controls.Add(this.BtnDelete);
             this.Controls.Add(this.LblCursor);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.LblLength);
             this.Controls.Add(this.label1);
@@ -310,7 +339,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label LblLength;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label LblCursor;
         private System.Windows.Forms.Button BtnDelete;
         private System.Windows.Forms.Button BtnLoad;
@@ -318,6 +346,9 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.CheckBox ChkPoints;
+        private System.Windows.Forms.CheckBox ChkLines;
+        private System.Windows.Forms.Label label3;
     }
 }
 

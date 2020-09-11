@@ -97,16 +97,22 @@ namespace PedicleLengthCS {
             Cv2.CvtColor(frame8, frameC, ColorConversionCodes.GRAY2BGR);
 
             // 線の描画
-            _LineSheet.CopyTo(frameC, _LineVolume[_Index]);
+            if (ChkLines.Checked) {
+                _LineSheet.CopyTo(frameC, _LineVolume[_Index]);
+            }
 
             // 点の描画
-            for (int i = 0; i < _Points.Count; i++) {
-                if (_Points[i].Z == _Index) {
-                    Cv2.Circle(frameC, new Point(_Points[i].X, _Points[i].Y), PointSize, new Scalar(255, 0, 0), Cv2.FILLED);
-                    Cv2.PutText(frameC, $"{i + 1}", new Point(_Points[i].X + PointSize, _Points[i].Y + PointSize),
-                        HersheyFonts.HersheySimplex, 0.4, new Scalar(255, 0, 0));
+            if (ChkPoints.Checked) {
+                for (int i = 0; i < _Points.Count; i++) {
+                    if (_Points[i].Z == _Index) {
+                        Cv2.Circle(frameC, new Point(_Points[i].X, _Points[i].Y), PointSize, new Scalar(255, 0, 0), Cv2.FILLED);
+                        Cv2.PutText(frameC, $"{i + 1}", new Point(_Points[i].X + PointSize, _Points[i].Y + PointSize),
+                            HersheyFonts.HersheySimplex, 0.4, new Scalar(255, 0, 0));
+                    }
                 }
+
             }
+
             // 画像表示
             pictureBox1.Image = BitmapConverter.ToBitmap(frameC);
 
@@ -356,9 +362,13 @@ namespace PedicleLengthCS {
             reader.Close();
 
             this.ReadDicom();
-            this.Draw();
             this.UpdateList();
             this.SetTitle();
+            this.Draw();
+        }
+
+        private void ShowCheckChanged(object sender, EventArgs e) {
+            this.Draw();
         }
     }
 }
