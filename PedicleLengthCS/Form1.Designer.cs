@@ -43,13 +43,16 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.ChkPoints = new System.Windows.Forms.CheckBox();
-            this.ChkLines = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.NumPointSize = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.NumLineSize = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TbrSliceIdx)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TbrWindowLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TbrWindowWidth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumPointSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumLineSize)).BeginInit();
             this.SuspendLayout();
             // 
             // BtnOpenDicom
@@ -253,49 +256,69 @@
             this.folderBrowserDialog1.Description = "Select Dicom folder";
             this.folderBrowserDialog1.ShowNewFolderButton = false;
             // 
-            // ChkPoints
-            // 
-            this.ChkPoints.AutoSize = true;
-            this.ChkPoints.Checked = true;
-            this.ChkPoints.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ChkPoints.Location = new System.Drawing.Point(58, 227);
-            this.ChkPoints.Name = "ChkPoints";
-            this.ChkPoints.Size = new System.Drawing.Size(56, 16);
-            this.ChkPoints.TabIndex = 20;
-            this.ChkPoints.Text = "Points";
-            this.ChkPoints.UseVisualStyleBackColor = true;
-            this.ChkPoints.CheckedChanged += new System.EventHandler(this.ShowCheckChanged);
-            // 
-            // ChkLines
-            // 
-            this.ChkLines.AutoSize = true;
-            this.ChkLines.Checked = true;
-            this.ChkLines.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ChkLines.Location = new System.Drawing.Point(120, 227);
-            this.ChkLines.Name = "ChkLines";
-            this.ChkLines.Size = new System.Drawing.Size(51, 16);
-            this.ChkLines.TabIndex = 21;
-            this.ChkLines.Text = "Lines";
-            this.ChkLines.UseVisualStyleBackColor = true;
-            this.ChkLines.CheckedChanged += new System.EventHandler(this.ShowCheckChanged);
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(14, 228);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(32, 12);
+            this.label3.Size = new System.Drawing.Size(58, 12);
             this.label3.TabIndex = 22;
-            this.label3.Text = "Show";
+            this.label3.Text = "Size: Point";
+            // 
+            // NumPointSize
+            // 
+            this.NumPointSize.Location = new System.Drawing.Point(74, 226);
+            this.NumPointSize.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.NumPointSize.Name = "NumPointSize";
+            this.NumPointSize.Size = new System.Drawing.Size(33, 19);
+            this.NumPointSize.TabIndex = 23;
+            this.NumPointSize.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.NumPointSize.ValueChanged += new System.EventHandler(this.SizeNumChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(113, 228);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(26, 12);
+            this.label4.TabIndex = 24;
+            this.label4.Text = "Line";
+            // 
+            // NumLineSize
+            // 
+            this.NumLineSize.Location = new System.Drawing.Point(140, 226);
+            this.NumLineSize.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.NumLineSize.Name = "NumLineSize";
+            this.NumLineSize.Size = new System.Drawing.Size(33, 19);
+            this.NumLineSize.TabIndex = 25;
+            this.NumLineSize.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.NumLineSize.ValueChanged += new System.EventHandler(this.NumLineSize_ValueChanged);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(703, 534);
+            this.Controls.Add(this.NumLineSize);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.NumPointSize);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.ChkLines);
-            this.Controls.Add(this.ChkPoints);
             this.Controls.Add(this.BtnSave);
             this.Controls.Add(this.BtnLoad);
             this.Controls.Add(this.BtnDelete);
@@ -319,6 +342,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.TbrSliceIdx)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TbrWindowLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TbrWindowWidth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumPointSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumLineSize)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -346,9 +371,10 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.CheckBox ChkPoints;
-        private System.Windows.Forms.CheckBox ChkLines;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown NumPointSize;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown NumLineSize;
     }
 }
 

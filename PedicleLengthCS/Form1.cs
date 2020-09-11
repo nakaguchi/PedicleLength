@@ -18,8 +18,6 @@ namespace PedicleLengthCS {
 
         private int _ImgW = 512;
         private int _ImgH = 512;
-        public const int PointSize = 4;
-        public const int LineSize = 2;
         private List<Mat> _Slices = new List<Mat>();
         private Mat _LineSheet;
         private List<Mat> _LineVolume = new List<Mat>();
@@ -97,17 +95,18 @@ namespace PedicleLengthCS {
             Cv2.CvtColor(frame8, frameC, ColorConversionCodes.GRAY2BGR);
 
             // 線の描画
-            if (ChkLines.Checked) {
+            if (NumLineSize.Value > 0) {
                 _LineSheet.CopyTo(frameC, _LineVolume[_Index]);
             }
 
             // 点の描画
-            if (ChkPoints.Checked) {
+            if (NumPointSize.Value > 0) {
+                var PointSize = (int)NumPointSize.Value;
                 for (int i = 0; i < _Points.Count; i++) {
                     if (_Points[i].Z == _Index) {
                         Cv2.Circle(frameC, new Point(_Points[i].X, _Points[i].Y), PointSize, new Scalar(255, 0, 0), Cv2.FILLED);
                         Cv2.PutText(frameC, $"{i + 1}", new Point(_Points[i].X + PointSize, _Points[i].Y + PointSize),
-                            HersheyFonts.HersheySimplex, 0.4, new Scalar(255, 0, 0));
+                            HersheyFonts.HersheySimplex, PointSize / 10.0, new Scalar(255, 0, 0));
                     }
                 }
 
@@ -251,7 +250,7 @@ namespace PedicleLengthCS {
                     var dy = (_Points[i].Y - _Points[i - 1].Y) * _PixelSpacingY;
                     var dz = (_Points[i].Z - _Points[i - 1].Z) * _SliceThickness;
                     _Length += Math.Sqrt(dx * dx + dy * dy + dz * dz);
-                    this.DrawLine(_Points[i], _Points[i - 1]);
+                    if (NumLineSize.Value > 0) this.DrawLine(_Points[i], _Points[i - 1]);
                 }
             }
             LblLength.Text = $"{_Length,6:0.0}";
@@ -263,7 +262,6 @@ namespace PedicleLengthCS {
         /// <param name="p1"></param>
         /// <param name="p2"></param>
         private void DrawLine(Point3i p1, Point3i p2) {
-            //Cv2.Line(_LineVolume[p1.Z], p1.X, p1.Y, p2.X, p2.Y, new Scalar(255), LineSize);
 
             var dx = Math.Abs(p2.X - p1.X);
             var dy = Math.Abs(p2.Y - p1.Y);
@@ -272,13 +270,12 @@ namespace PedicleLengthCS {
             var sy = (p2.Y - p1.Y >= 0) ? 1 : -1;
             var sz = (p2.Z - p1.Z >= 0) ? 1 : -1;
             var p = p1;
+            int lineThickness = (int)NumLineSize.Value - 1;
             if (dx >= dy && dx >= dz) {
                 var e1 = -dx;
                 var e2 = -dx;
                 for (var i = 0; i <= dx; i++) {
-                    if (p.X >= 0 && p.X < _ImgW && p.Y >= 0 && p.Y < _ImgH && p.Z >= 0 && p.Z < _Slices.Count) {
-                        _LineVolume[p.Z].At<Byte>(p.Y, p.X) = 255;
-                    }
+                    this.DrawBox(p, lineThickness);
                     p.X += sx;
                     e1 += 2 * dy;
                     e2 += 2 * dz;
@@ -297,9 +294,7 @@ namespace PedicleLengthCS {
                 var e1 = -dy;
                 var e2 = -dy;
                 for (var i = 0; i <= dy; i++) {
-                    if (p.X >= 0 && p.X < _ImgW && p.Y >= 0 && p.Y < _ImgH && p.Z >= 0 && p.Z < _Slices.Count) {
-                        _LineVolume[p.Z].At<Byte>(p.Y, p.X) = 255;
-                    }
+                    this.DrawBox(p, lineThickness);
                     p.Y += sy;
                     e1 += 2 * dx;
                     e2 += 2 * dz;
@@ -318,9 +313,7 @@ namespace PedicleLengthCS {
                 var e1 = -dz;
                 var e2 = -dz;
                 for (var i = 0; i <= dz; i++) {
-                    if (p.X >= 0 && p.X < _ImgW && p.Y >= 0 && p.Y < _ImgH && p.Z >= 0 && p.Z < _Slices.Count) {
-                        _LineVolume[p.Z].At<Byte>(p.Y, p.X) = 255;
-                    }
+                    this.DrawBox(p, lineThickness);
                     p.Z += sz;
                     e1 += 2 * dx;
                     e2 += 2 * dy;
@@ -333,6 +326,22 @@ namespace PedicleLengthCS {
                     if (e2 >= 0) {
                         p.Y += sy;
                         e2 -= 2 * dz;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 3次元矩形の描画
+        /// </summary>
+        /// <param name="pt"></param>
+        private void DrawBox(Point3i pt, int lineThickness) {
+            for (var z = pt.Z - lineThickness; z <= pt.Z + lineThickness; z++) {
+                for (var y = pt.Y - lineThickness; y <= pt.Y + lineThickness; y++) {
+                    for (var x = pt.X - lineThickness; x <= pt.X + lineThickness; x++) {
+                        if (x >= 0 && x < _ImgW && y >= 0 && y < _ImgH && z >= 0 && z < _Slices.Count) {
+                            _LineVolume[z].At<Byte>(y, x) = 255;
+                        }
                     }
                 }
             }
@@ -443,11 +452,21 @@ namespace PedicleLengthCS {
         }
 
         /// <summary>
-        /// Showチェックボタンのチェック
+        /// サイズ数値の変更
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ShowCheckChanged(object sender, EventArgs e) {
+        private void SizeNumChanged(object sender, EventArgs e) {
+            this.Draw();
+        }
+
+        /// <summary>
+        /// 線幅数値の変更
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NumLineSize_ValueChanged(object sender, EventArgs e) {
+            this.UpdateList();
             this.Draw();
         }
     }
