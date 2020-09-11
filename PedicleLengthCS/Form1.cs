@@ -20,16 +20,17 @@ namespace PedicleLengthCS {
         public const int ImgH = 512;
         public const int PointSize = 4;
         private List<Mat> _Slices = new List<Mat>();
+
         private List<Point3i> _Points = new List<Point3i>();
-        string _DicomDir = "";
-        double _Length = 0;
-        string _ConfigFile = "Pedicle.csv";
-        int _idx;
-        int _wl;
-        int _ww;
-        double _SliceThickness = -1.0;
-        double _PixelSpacingX = -1.0;
-        double _PixelSpacingY = -1.0;
+        private string _DicomDir = "";
+        private double _Length = 0;
+        private string _ConfigFile = "Pedicle.csv";
+        private int _Index;
+        private int _WL;
+        private int _WW;
+        private double _SliceThickness = -1.0;
+        private double _PixelSpacingX = -1.0;
+        private double _PixelSpacingY = -1.0;
 
         /// <summary>
         /// コンストラクタ
@@ -37,9 +38,9 @@ namespace PedicleLengthCS {
         public MainForm() {
             InitializeComponent();
             pictureBox1.MouseWheel += new MouseEventHandler(pictureBox1_MouseWheel);
-            _idx = TbrSliceIdx.Value;
-            _wl = TbrWindowLevel.Value;
-            _ww = TbrWindowWidth.Value;
+            _Index = TbrSliceIdx.Value;
+            _WL = TbrWindowLevel.Value;
+            _WW = TbrWindowWidth.Value;
             this.SetTitle();
         }
 
@@ -80,18 +81,18 @@ namespace PedicleLengthCS {
             if (_Slices.Count < 1) return;  // データ読み込み前は表示しない
 
             // パラメータ設定
-            double alpha = 255.0 / _ww;
-            double beta = -alpha * (_wl - _ww / 2);
+            double alpha = 255.0 / _WW;
+            double beta = -alpha * (_WL - _WW / 2);
 
             // 画像を表示用に変換（Window処理含む）
             var frame8 = new Mat();
-            _Slices[_idx].ConvertTo(frame8, MatType.CV_8UC1, alpha, beta);
+            _Slices[_Index].ConvertTo(frame8, MatType.CV_8UC1, alpha, beta);
             var frameC = new Mat();
             Cv2.CvtColor(frame8, frameC, ColorConversionCodes.GRAY2BGR);
 
             // 点の描画
             for (int i = 0; i < _Points.Count; i++) {
-                if (_Points[i].Z == _idx) {
+                if (_Points[i].Z == _Index) {
                     Cv2.Circle(frameC, new Point(_Points[i].X, _Points[i].Y), PointSize, new Scalar(255, 0, 0), Cv2.FILLED);
                     Cv2.PutText(frameC, $"{i + 1}", new Point(_Points[i].X + PointSize, _Points[i].Y + PointSize),
                         HersheyFonts.HersheySimplex, 0.4, new Scalar(255, 0, 0));
@@ -102,9 +103,9 @@ namespace PedicleLengthCS {
 
             // ラベル更新
             LblVoxel.Text = $"Voxel: {_PixelSpacingX:0.000} x {_PixelSpacingY:0.000} x {_SliceThickness:0.0} mm";
-            LblSliceIdx.Text = $"Slice Index: {_idx}/{_Slices.Count - 1}";
-            LblWindowLevel.Text = $"Window Level: {_wl}";
-            LblWindowWidth.Text = $"Window Width: {_ww}";
+            LblSliceIdx.Text = $"Slice Index: {_Index}/{_Slices.Count - 1}";
+            LblWindowLevel.Text = $"Window Level: {_WL}";
+            LblWindowWidth.Text = $"Window Width: {_WW}";
         }
 
 
@@ -114,9 +115,9 @@ namespace PedicleLengthCS {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void SliderChanged(object sender, EventArgs e) {
-            _idx = TbrSliceIdx.Value;
-            _wl = TbrWindowLevel.Value;
-            _ww = TbrWindowWidth.Value;
+            _Index = TbrSliceIdx.Value;
+            _WL = TbrWindowLevel.Value;
+            _WW = TbrWindowWidth.Value;
             this.Draw();
         }
 
@@ -186,7 +187,7 @@ namespace PedicleLengthCS {
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e) {
             var pos = ImagePosOnPbox((PictureBox)sender, e.X, e.Y);
             short ctval = -1;
-            if (pos.X >= 0) ctval = _Slices[_idx].At<short>(pos.Y, pos.X);
+            if (pos.X >= 0) ctval = _Slices[_Index].At<short>(pos.Y, pos.X);
             LblCursor.Text = $"Cursor ({pos.X}, {pos.Y}) : {ctval}";
         }
 
@@ -212,7 +213,7 @@ namespace PedicleLengthCS {
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e) {
             var pos = ImagePosOnPbox((PictureBox)sender, e.X, e.Y);
             if (pos.X < 0) return;  // 画像外なら終了
-            _Points.Add(new Point3i(pos.X, pos.Y, _idx));
+            _Points.Add(new Point3i(pos.X, pos.Y, _Index));
             this.UpdateList();
             this.Draw();
         }
@@ -262,7 +263,7 @@ namespace PedicleLengthCS {
         }
 
         /// <summary>
-        /// 保存ボタン
+        /// 設定保存ボタン
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -274,8 +275,8 @@ namespace PedicleLengthCS {
 
             var writer = new StreamWriter(saveFileDialog1.FileName, false);
             writer.WriteLine($"DicomDir,{_DicomDir}");
-            writer.WriteLine($"Window Level,{_wl}");
-            writer.WriteLine($"Window Width,{_ww}");
+            writer.WriteLine($"Window Level,{_WL}");
+            writer.WriteLine($"Window Width,{_WW}");
             for (var i = 0; i < _Points.Count; i++) {
                 writer.WriteLine($"Point,{i},X,{_Points[i].X},Y,{_Points[i].Y},Z,{_Points[i].Z}");
             }
@@ -283,6 +284,11 @@ namespace PedicleLengthCS {
             writer.Close();
         }
 
+        /// <summary>
+        /// 設定読み込みボタン
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnLoad_Click(object sender, EventArgs e) {
             if (openFileDialog1.ShowDialog() == DialogResult.Cancel) return;
             _ConfigFile = openFileDialog1.FileName;
