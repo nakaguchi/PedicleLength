@@ -23,6 +23,7 @@ namespace PedicleLengthCS {
         private List<Point3i> _Points = new List<Point3i>();
         string _DicomDir = "";
         double _Length = 0;
+        string _ConfigFile = "Pedicle.csv";
         int _idx;
         int _wl;
         int _ww;
@@ -47,6 +48,7 @@ namespace PedicleLengthCS {
         /// </summary>
         /// <returns></returns>
         private bool ReadDicom() {
+            if (_DicomDir.Length < 1) return false;
             var dicomFiles = Directory.GetFiles(_DicomDir, @"*", SearchOption.TopDirectoryOnly);
 
             _Slices.Clear();
@@ -266,8 +268,9 @@ namespace PedicleLengthCS {
         /// <param name="e"></param>
         private void BtnSave_Click(object sender, EventArgs e) {
             if (_Slices.Count < 1) return;
-            saveFileDialog1.FileName = "setting";
+            saveFileDialog1.FileName = _ConfigFile;
             if (saveFileDialog1.ShowDialog() == DialogResult.Cancel) return;
+            _ConfigFile = saveFileDialog1.FileName;
 
             var writer = new StreamWriter(saveFileDialog1.FileName, false);
             writer.WriteLine($"DicomDir,{_DicomDir}");
@@ -278,6 +281,57 @@ namespace PedicleLengthCS {
             }
             writer.WriteLine($"Length,{_Length},mm");
             writer.Close();
+        }
+
+        private void BtnLoad_Click(object sender, EventArgs e) {
+            if (openFileDialog1.ShowDialog() == DialogResult.Cancel) return;
+            _ConfigFile = openFileDialog1.FileName;
+
+            _Points.Clear();
+            _Slices.Clear();
+            TbrSliceIdx.Value = 0;
+            var reader = new StreamReader(openFileDialog1.FileName);
+            while(reader.Peek() != -1) {
+                var buf = reader.ReadLine();
+                var elems = buf.Split(',');
+                if (elems.Length > 0) {
+                    switch (elems[0]) {
+                    case "DicomDir":
+                        if (elems.Length >= 2) _DicomDir = elems[1];
+                        break;
+                    case "Window Level":
+                        if (elems.Length >= 2) {
+                            int val = 0;
+                            if (int.TryParse(elems[1], out val)) TbrWindowLevel.Value = val;
+                        }
+                        break;
+                    case "Window Width":
+                        if (elems.Length >= 2) {
+                            int val = 0;
+                            if (int.TryParse(elems[1], out val)) TbrWindowWidth.Value = val;
+                        }
+                        break;
+                    case "Point":
+                        if (elems.Length >= 8) {
+                            var pt = new Point3i(-1, -1, -1);
+                            int val = 0;
+                            if (int.TryParse(elems[3], out val)) pt.X = val;
+                            if (int.TryParse(elems[5], out val)) pt.Y = val;
+                            if (int.TryParse(elems[7], out val)) pt.Z = val;
+                            if (pt.X >= 0 && pt.Y >= 0 && pt.Z >= 0) {
+                                _Points.Add(pt);
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            reader.Close();
+
+            this.ReadDicom();
+            this.Draw();
+            this.UpdateList();
+            this.SetTitle();
         }
     }
 }

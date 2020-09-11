@@ -42,6 +42,8 @@
             this.BtnLoad = new System.Windows.Forms.Button();
             this.BtnSave = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TbrSliceIdx)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TbrWindowLevel)).BeginInit();
@@ -229,6 +231,7 @@
             this.BtnLoad.TabIndex = 18;
             this.BtnLoad.Text = "Load";
             this.BtnLoad.UseVisualStyleBackColor = true;
+            this.BtnLoad.Click += new System.EventHandler(this.BtnLoad_Click);
             // 
             // BtnSave
             // 
@@ -244,8 +247,14 @@
             // saveFileDialog1
             // 
             this.saveFileDialog1.DefaultExt = "csv";
-            this.saveFileDialog1.Filter = "CSVファイル|*.csv";
-            this.saveFileDialog1.Title = "保存";
+            this.saveFileDialog1.Filter = "CSV file|*.csv";
+            this.saveFileDialog1.Title = "Save config file";
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.DefaultExt = "csv";
+            this.openFileDialog1.Filter = "CSV file|*.csv";
+            this.openFileDialog1.Title = "Load config file";
             // 
             // MainForm
             // 
@@ -302,6 +311,8 @@
         private System.Windows.Forms.Button BtnLoad;
         private System.Windows.Forms.Button BtnSave;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
     }
 }
 
