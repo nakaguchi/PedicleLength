@@ -21,6 +21,7 @@ namespace PedicleLengthCS {
         public const int PointSize = 4;
         private List<Mat> _Slices = new List<Mat>();
         private List<Point3i> _Points = new List<Point3i>();
+        string _DicomDir = "";
         int _idx;
         int _wl;
         int _ww;
@@ -37,15 +38,15 @@ namespace PedicleLengthCS {
             _idx = TbrSliceIdx.Value;
             _wl = TbrWindowLevel.Value;
             _ww = TbrWindowWidth.Value;
+            this.SetTitle();
         }
 
         /// <summary>
         /// Dicomファイルの読み込み
         /// </summary>
-        /// <param name="dir"></param>
         /// <returns></returns>
-        private bool ReadDicom(string dir) {
-            var dicomFiles = Directory.GetFiles(dir, @"*", SearchOption.TopDirectoryOnly);
+        private bool ReadDicom() {
+            var dicomFiles = Directory.GetFiles(_DicomDir, @"*", SearchOption.TopDirectoryOnly);
 
             _Slices.Clear();
             foreach (var f in dicomFiles) {
@@ -117,12 +118,28 @@ namespace PedicleLengthCS {
         }
 
         /// <summary>
+        /// ウインドウタイトル更新
+        /// </summary>
+        private void SetTitle() {
+            this.Text = "Pedicle Length";
+#if DEBUG
+            this.Text += " [DEBUG]";
+#endif
+            if (_DicomDir.Length > 0) this.Text += $" - {_DicomDir}";
+        }
+
+        /// <summary>
         /// Open Dicom Folderボタン
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void BtnOpenDicom_Click(object sender, EventArgs e) {
-            if (!ReadDicom(@"D:\usr\prog\PedicleLength\SampleData\5mm early phase")) return;
+#if DEBUG
+            _DicomDir = @"D:\usr\prog\PedicleLength\SampleData\5mm early phase";
+#else
+#endif
+            if (!ReadDicom()) return;
+            this.SetTitle();
             this.Draw();
         }
 
@@ -239,6 +256,15 @@ namespace PedicleLengthCS {
             _Points.RemoveAt(LbxPoints.SelectedIndex);
             this.UpdateList();
             this.Draw();
+        }
+
+        /// <summary>
+        /// 保存ボタン
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnSave_Click(object sender, EventArgs e) {
+
         }
     }
 }
