@@ -240,6 +240,9 @@ namespace PedicleLengthCS {
         /// </summary>
         private void UpdateList() {
             LbxPoints.Items.Clear();
+            for(var i=0; i<_LineVolume.Count; i++) {
+                _LineVolume[i].SetTo(new Scalar(0));
+            }
             _Length = 0;
             for (var i = 0; i < _Points.Count; i++) {
                 LbxPoints.Items.Add($"{i + 1,2} ({_Points[i].X,3}, {_Points[i].Y,3}, {_Points[i].Z,4})");
@@ -260,7 +263,79 @@ namespace PedicleLengthCS {
         /// <param name="p1"></param>
         /// <param name="p2"></param>
         private void DrawLine(Point3i p1, Point3i p2) {
-            Cv2.Line(_LineVolume[p1.Z], p1.X, p1.Y, p2.X, p2.Y, new Scalar(255), LineSize);
+            //Cv2.Line(_LineVolume[p1.Z], p1.X, p1.Y, p2.X, p2.Y, new Scalar(255), LineSize);
+
+            var dx = Math.Abs(p2.X - p1.X);
+            var dy = Math.Abs(p2.Y - p1.Y);
+            var dz = Math.Abs(p2.Z - p1.Z);
+            var sx = (p2.X - p1.X >= 0) ? 1 : -1;
+            var sy = (p2.Y - p1.Y >= 0) ? 1 : -1;
+            var sz = (p2.Z - p1.Z >= 0) ? 1 : -1;
+            var p = p1;
+            if (dx >= dy && dx >= dz) {
+                var e1 = -dx;
+                var e2 = -dx;
+                for (var i = 0; i <= dx; i++) {
+                    if (p.X >= 0 && p.X < _ImgW && p.Y >= 0 && p.Y < _ImgH && p.Z >= 0 && p.Z < _Slices.Count) {
+                        _LineVolume[p.Z].At<Byte>(p.Y, p.X) = 255;
+                    }
+                    p.X += sx;
+                    e1 += 2 * dy;
+                    e2 += 2 * dz;
+
+                    if (e1 >= 0) {
+                        p.Y += sy;
+                        e1 -= 2 * dx;
+                    }
+
+                    if (e2 >= 0) {
+                        p.Z += sz;
+                        e2 -= 2 * dx;
+                    }
+                }
+            } else if (dy >= dx && dy >= dz) {
+                var e1 = -dy;
+                var e2 = -dy;
+                for (var i = 0; i <= dy; i++) {
+                    if (p.X >= 0 && p.X < _ImgW && p.Y >= 0 && p.Y < _ImgH && p.Z >= 0 && p.Z < _Slices.Count) {
+                        _LineVolume[p.Z].At<Byte>(p.Y, p.X) = 255;
+                    }
+                    p.Y += sy;
+                    e1 += 2 * dx;
+                    e2 += 2 * dz;
+
+                    if (e1 >= 0) {
+                        p.X += sx;
+                        e1 -= 2 * dy;
+                    }
+
+                    if (e2 >= 0) {
+                        p.Z += sz;
+                        e2 -= 2 * dy;
+                    }
+                }
+            } else {
+                var e1 = -dz;
+                var e2 = -dz;
+                for (var i = 0; i <= dz; i++) {
+                    if (p.X >= 0 && p.X < _ImgW && p.Y >= 0 && p.Y < _ImgH && p.Z >= 0 && p.Z < _Slices.Count) {
+                        _LineVolume[p.Z].At<Byte>(p.Y, p.X) = 255;
+                    }
+                    p.Z += sz;
+                    e1 += 2 * dx;
+                    e2 += 2 * dy;
+
+                    if (e1 >= 0) {
+                        p.X += sx;
+                        e1 -= 2 * dz;
+                    }
+
+                    if (e2 >= 0) {
+                        p.Y += sy;
+                        e2 -= 2 * dz;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -367,6 +442,11 @@ namespace PedicleLengthCS {
             this.Draw();
         }
 
+        /// <summary>
+        /// Showチェックボタンのチェック
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ShowCheckChanged(object sender, EventArgs e) {
             this.Draw();
         }
