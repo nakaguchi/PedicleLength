@@ -23,6 +23,7 @@
         /// コード エディターで変更しないでください。
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.BtnOpenDicom = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.TbrSliceIdx = new System.Windows.Forms.TrackBar();
@@ -336,6 +337,7 @@
             this.Controls.Add(this.TbrSliceIdx);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.BtnOpenDicom);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "Pedicle Length";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

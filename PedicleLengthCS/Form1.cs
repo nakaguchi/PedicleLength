@@ -139,7 +139,8 @@ namespace PedicleLengthCS {
         /// ウインドウタイトル更新
         /// </summary>
         private void SetTitle() {
-            this.Text = "Pedicle Length";
+            var ver = FileVersionInfo.GetVersionInfo(Application.ExecutablePath);
+            this.Text = $"Pedicle Length ver {ver.FileMajorPart}.{ver.FileMinorPart}";
 #if DEBUG
             this.Text += " [DEBUG]";
 #endif
